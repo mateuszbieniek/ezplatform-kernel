@@ -41,8 +41,9 @@ class TrashHandler extends AbstractHandler implements TrashHandlerInterface
 
         $location = $this->persistenceHandler->locationHandler()->load($locationId);
         $contentId = $location->contentId;
-        $reverseRelations = $this->persistenceHandler->contentHandler()->loadRelations($contentId);
-        $versions = $this->persistenceHandler->contentHandler()->listVersions($contentId);
+        $contentHandler = $this->persistenceHandler->contentHandler();
+        $reverseRelations = $contentHandler->loadRelations($contentId);
+        $versions = $contentHandler->listVersions($contentId);
         $return = $this->persistenceHandler->trashHandler()->trashSubtree($locationId);
 
         $relationTags = [];
@@ -56,7 +57,7 @@ class TrashHandler extends AbstractHandler implements TrashHandlerInterface
         }
 
         $versionTags = array_map(function (VersionInfo $versionInfo) use ($contentId): string {
-            return  $this->cacheIdentifierGenerator->generateTag(
+            return $this->cacheIdentifierGenerator->generateTag(
                 self::CONTENT_VERSION_IDENTIFIER,
                 [$contentId, $versionInfo->versionNo]
             );

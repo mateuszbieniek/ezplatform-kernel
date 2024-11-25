@@ -49,7 +49,7 @@ class ContentHandlerTest extends AbstractInMemoryCacheHandlerTest
             ['setStatus', [2, 0, 1], [['content_version', [2, 1], false]], null, ['c-2-v-1']],
             ['setStatus', [2, 1, 1], [['content', [2], false]], null, ['c-2']],
             ['updateMetadata', [2, new MetadataUpdateStruct()], [['content', [2], false]], null, ['c-2']],
-            //['updateContent', [2, 1, new UpdateStruct()], [['content_version', [2, 1], false]], null, ['c-2-v-1']],
+            ['updateContent', [2, 1, new UpdateStruct()], [['content_version', [2, 1], false]], null, ['c-2-v-1']],
             //['deleteContent', [2]], own tests for relations complexity
             ['deleteVersion', [2, 1], [['content_version', [2, 1], false]], null, ['c-2-v-1']],
             ['addRelation', [new RelationCreateStruct()]],
@@ -308,7 +308,7 @@ class ContentHandlerTest extends AbstractInMemoryCacheHandlerTest
     /**
      * @covers \eZ\Publish\Core\Persistence\Cache\ContentHandler::updateContent
      */
-    public function testUpdateContent()
+    public function testUpdateContent(): void
     {
         $this->loggerMock->expects($this->once())->method('logCall');
 
@@ -332,14 +332,15 @@ class ContentHandlerTest extends AbstractInMemoryCacheHandlerTest
         $this->cacheIdentifierGeneratorMock
             ->expects($this->exactly(5))
             ->method('generateTag')
-            ->withConsecutive(
-                ['location', [3], false],
-                ['location', [4], false],
-                ['location_path', [3], false],
-                ['location_path', [4], false],
-                ['content_version', [2, 1], false],
-            )
-            ->willReturnOnConsecutiveCalls('l-3', 'l-4', 'lp-3', 'lp-4', 'c-2-v-1');
+            ->will(
+                self::returnValueMap([
+                    ['location', [3], false, 'l-3'],
+                    ['location', [4], false, 'l-4'],
+                    ['location_path', [3], false, 'lp-3'],
+                    ['location_path', [4], false, 'lp-4'],
+                    ['content_version', [2, 1], false, 'c-2-v-1'],
+                ])
+            );
 
         $this->cacheMock
             ->expects($this->once())
