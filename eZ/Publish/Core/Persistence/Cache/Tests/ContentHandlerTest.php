@@ -49,7 +49,8 @@ class ContentHandlerTest extends AbstractInMemoryCacheHandlerTest
             ['setStatus', [2, 0, 1], [['content_version', [2, 1], false]], null, ['c-2-v-1']],
             ['setStatus', [2, 1, 1], [['content', [2], false]], null, ['c-2']],
             ['updateMetadata', [2, new MetadataUpdateStruct()], [['content', [2], false]], null, ['c-2']],
-            ['updateContent', [2, 1, new UpdateStruct()], [['content_version', [2, 1], false]], null, ['c-2-v-1']],
+            //updateContent has it own test now due relations complexity
+            //['updateContent', [2, 1, new UpdateStruct()], [['content_version', [2, 1], false]], null, ['c-2-v-1']],
             //['deleteContent', [2]], own tests for relations complexity
             ['deleteVersion', [2, 1], [['content_version', [2, 1], false]], null, ['c-2-v-1']],
             ['addRelation', [new RelationCreateStruct()]],
